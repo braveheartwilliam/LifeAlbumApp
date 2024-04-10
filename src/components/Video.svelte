@@ -2,22 +2,21 @@
 	export let items = [];
 
 	import Breadcrumbs from './Breadcrumbs.svelte';
+	items.pop();
 
-	items.push({ text: 'Places', href: '#places' });
+	items.push({ text: 'Video', href: '#video' });
 </script>
 
-<div class="places_home">
+<div class="video_home">
 	<Breadcrumbs {items} />
 
-	<h1>This is where view by locations and places visited</h1>
+	<h1>This is where view by video</h1>
 </div>
 
 <style>
-	.places_home {
+	.video_home {
 		color: blue;
 		font-size: large;
-		width: 95vw;
-		height: 100vh;
 		scroll-snap-align: start;
 	}
 </style>

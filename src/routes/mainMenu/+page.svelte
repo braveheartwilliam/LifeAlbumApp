@@ -1,23 +1,43 @@
 <script>
+	import Breadcrumbs from '/src/components/Breadcrumbs.svelte';
+	import Places from '/src/components/Places.svelte';
+	import { page } from '$app/stores';
+	// import Trips from '$lib//Trips.svelte';
+	// import Pictures from '$lib//Pictures.svelte';
+	// import People from '$lib/People.svelte';
+	// import Me from '$lib/Me.svelte';
+	// import Events from '$lib/Events.svelte';
+	// import Music from '$lib/Music.svelte';
+	// import Diaries from '$lib/Diaries.svelte';
+	// import TravelBlogs from '$lib/TravelBlogs.svelte';
+	// import Video from '$lib/Video.svelte';
+	// let actionType = 'view';
+	let compParam;
 
+	const userName = sessionStorage.getItem('userName');
 
-	import Breadcrumbs from '$lib/Breadcrumbs.svelte';
-	import Places from '$lib//Places.svelte';
-	import Trips from '$lib//Trips.svelte';
-	import Pictures from '$lib//Pictures.svelte';
-	import People from '$lib/People.svelte';
-	import Me from '$lib/Me.svelte';
-	import Events from '$lib/Me.svelte';
-	// todo:  add routes for below
-	import Music from '$lib/Me.svelte';
-	import Diaries from '$lib/Me.svelte';
-	import TravelBlogs from '$lib/Me.svelte';
-	import Video from '$lib/Me.svelte';
+	export let items = [];
 
-	//   video, images, music, narration, diaries
-	//  The above are all components that are used in this page
-const userName =sessionStorage.getItem('userName');
-	let items = [{ text: 'Home', href: '/' }];
+	items = [{ text: 'Home Page', href: '/mainMenu', actionType: 'view' }];
+	console.log('mainMenu: ', items);
+
+	// items = [{ text: '... Home Page', href: '/mainMenu' }];
+
+	console.log('mainMenu2: ', items);
+
+	// Serialize the array before passing it to the URL
+	let serializedItems;
+
+	// function setAction(action) {
+	// 	// let actionType = action;
+	// 	compParam = { crumbs: items, actionType: action };
+	// 	console.log('mainMenu: ', items, action, compParam);
+	// }
+
+	function handleSerialization(action) {
+		items.actionType = action;
+		serializedItems = encodeURIComponent(JSON.stringify(items));
+	}
 </script>
 
 <main>
@@ -30,22 +50,52 @@ const userName =sessionStorage.getItem('userName');
 					<p>What do you want to see?</p>
 					<nav class="home_left_nav">
 						<li class="nav_list">
-							<a href="#places">Places</a>
+							<a on:click={handleSerialization('view')} href="/pages/places/{serializedItems}/"
+								>Places</a
+							>
 						</li>
 						<li class="nav_list">
-							<a href="#trips">Trips</a>
+							<a on:click={handleSerialization('view')} href="/pages/trips/{serializedItems}/"
+								>Trips</a
+							>
 						</li>
 						<li class="nav_list">
-							<a href="#events">Events</a>
+							<a on:click={handleSerialization('view')} href="/pages/events/{serializedItems}/"
+								>Events</a
+							>
 						</li>
 						<li class="nav_list">
-							<a href="#pictures">Pictures</a>
+							<a on:click={handleSerialization('view')} href="/pages/pictures/{serializedItems}/"
+								>Pictures</a
+							>
 						</li>
 						<li class="nav_list">
-							<a href="#people">People</a>
+							<a on:click={handleSerialization('view')} href="/pages/people/{serializedItems}/"
+								>People</a
+							>
 						</li>
 						<li class="nav_list">
-							<a href="#me">Me</a>
+							<a on:click={handleSerialization('view')} href="/pages/me/{serializedItems}/">Me</a>
+						</li>
+						<li class="nav_list">
+							<a on:click={handleSerialization('view')} href="/pages/music/{serializedItems}/"
+								>Music</a
+							>
+						</li>
+						<li class="nav_list">
+							<a on:click={handleSerialization('view')} href="/pages/diaries/{serializedItems}/"
+								>Diaries</a
+							>
+						</li>
+						<li class="nav_list">
+							<a on:click={handleSerialization('view')} href="/pages/travelBlogs/{serializedItems}/"
+								>Travel Blogs</a
+							>
+						</li>
+						<li class="nav_list">
+							<a on:click={handleSerialization('view')} href="/pages/videos/{serializedItems}/"
+								>Video</a
+							>
 						</li>
 					</nav>
 				</div>
@@ -57,8 +107,19 @@ const userName =sessionStorage.getItem('userName');
 					<nav class="home_right_nav">
 						<li class="nav_list">
 							<a href="#places">Manage Places</a>
+							<!-- TODO make this a dropdowns -->
+							<ul>
+								<li>Add places</li>
+								<li>Edit places</li>
+								<ul>
+									<li>groups</li>
+									<li>individual</li>
+								</ul>
+								<li>Delete places</li>
+							</ul>
 						</li>
-						<li class="nav_list">
+
+						<!-- <li class="nav_list">
 							<a href="#trips">Manage Trips</a>
 						</li>
 						<li class="nav_list">
@@ -73,6 +134,18 @@ const userName =sessionStorage.getItem('userName');
 						<li class="nav_list">
 							<a href="#me">Manage Me</a>
 						</li>
+						<li class="nav_list">
+							<a href="#music">Manage Music</a>
+						</li>
+						<li class="nav_list">
+							<a href="#diaries">Manage Diaries</a>
+						</li>
+						<li class="nav_list">
+							<a href="#travelBlogs">Manage Travel Blogs</a>
+						</li>
+						<li class="nav_list">
+							<a href="#video">Manage Video</a>
+						</li> -->
 					</nav>
 				</div>
 			</div>
@@ -83,37 +156,58 @@ const userName =sessionStorage.getItem('userName');
 
 <!-- <Places /> -->
 
-<div ID="places" class="places_container page">
+<!-- <div ID="places" class="manage_list">
 	<div class="places_body">
 		<Places {items} />
 	</div>
 </div>
 <!-- Trips -->
-<div ID="trips" class="trips_container page">
+<!-- <div ID="trips" class="manage_list">
 	<div class="trips_body">
 		<Trips {items} />
 	</div>
 </div>
-<div ID="events" class="events_container page">
+<div ID="Events" class="manage_list">
 	<div class="events_body">
 		<Events {items} />
 	</div>
 </div>
-<div ID="pictures" class="pictures_container page">
+<div ID="pictures" class="manage_list">
 	<div class="places_body">
-		<pictures {items} />
+		<Pictures {items} />
 	</div>
 </div>
-<div ID="people" class="people_container page">
+<div ID="people" class="manage_list">
 	<div class="places_body">
-		<people {items} />
+		<People {items} />
 	</div>
 </div>
-<div ID="me" class="me_container page">
+<div ID="me" class="manage_list">
 	<div class="places_body">
-		<me {items} />
+		<Me {compParam} />
 	</div>
 </div>
+<div ID="music" class="manage_list">
+	<div class="places_body">
+		<Music {items} />
+	</div>
+</div>
+<div ID="diaries" class="manage_list">
+	<div class="places_body">
+		<Diaries {items} />
+	</div>
+</div>
+<div ID="travelBlogs" class="manage_list">
+	<div class="places_body">
+		<TravelBlogs {items} />
+	</div>
+</div>
+<div ID="me" class="manage_list">
+	<div class="places_body">
+		<Video {items} />
+	</div>
+</div> -->
+-->
 
 <style>
 	li > a {
@@ -125,7 +219,7 @@ const userName =sessionStorage.getItem('userName');
 	}
 	.nav_list {
 		margin: 0 5px;
-		text-decoration: dashed;
+		text-decoration: none;
 	}
 	.page {
 		width: 100vw;
@@ -135,7 +229,7 @@ const userName =sessionStorage.getItem('userName');
 		position: sticky;
 		top: 0;
 	}
-	.places_container {
+	.manage_list {
 		overflow: auto;
 		overscroll-behavior: contain;
 		background-color: aqua;
@@ -145,70 +239,6 @@ const userName =sessionStorage.getItem('userName');
 		position: sticky;
 		top: 0;
 		max-height: 1000px;
-	}
-	.places_body {
-		width: 100vw;
-		height: 100%;
-	}
-	.trips_container {
-		background-color: rgb(129, 83, 189);
-
-		overflow: auto;
-		overscroll-behavior: contain;
-		height: 100vw;
-		width: 100vw;
-		position: -webkit-sticky;
-		position: sticky;
-		top: 0;
-		max-height: 1000px;
-	}
-	.trips_body {
-		width: 100vw;
-		height: 100%;
-	}
-	.pictures_container {
-		background-color: rgb(129, 83, 189);
-		height: 100vw;
-		width: 100vw;
-		overflow: auto;
-		overscroll-behavior: contain;
-
-		position: -webkit-sticky;
-		position: sticky;
-		top: 0;
-		max-height: 1000px;
-	}
-	.pictures_body {
-		width: 100vw;
-		height: 100%;
-	}
-	.people_container {
-		background-color: rgb(129, 83, 189);
-
-		overflow: auto;
-		overscroll-behavior: contain;
-		max-height: 1000px;
-		position: -webkit-sticky;
-		position: sticky;
-		top: 0;
-	}
-	.people_body {
-		width: 100vw;
-		height: 100%;
-	}
-	.me_container {
-		background-color: rgb(129, 83, 189);
-
-		overflow: auto;
-		overscroll-behavior: contain;
-		max-height: 1000px;
-		position: -webkit-sticky;
-		position: sticky;
-		top: 0;
-	}
-	.me_body {
-		width: 100vw;
-		height: 100%;
 	}
 
 	.HomePage {

@@ -4,18 +4,19 @@
 	import Breadcrumbs from './Breadcrumbs.svelte';
 	items.pop();
 
-	items.push({ text: 'Me', href: '#me' });
+	items.push({ text: 'People', href: '#people' });
 </script>
 
-<div class="me_home">
+<div class="music_home">
 	<Breadcrumbs {items} />
 
-	<h1>This is where view by me</h1>
+	<h1>This is where view by People</h1>
 </div>
 
 <style>
-	.me_home {
+	.music_home {
 		color: blue;
 		font-size: large;
+		scroll-snap-align: start;
 	}
 </style>

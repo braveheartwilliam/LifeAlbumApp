@@ -74,7 +74,7 @@
 		color: #070abd;
 		font-size: 1.5rem;
 		text-shadow: 2px 2px 2px rgb(218, 204, 12);
-		background-image: url(src/lib/Assets/WelcomePageBackground.jpg);
+		background-image: url(src/assets/WelcomePageBackground.jpg);
 		background-size: cover;
 		background-position-y: bottom;
 	}
