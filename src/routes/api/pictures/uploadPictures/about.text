@@ -1,0 +1,192 @@
+
+
+This describe a little bit of the why and how of the code in the other files in this route.
+
+
+Other links:  *  https://kit.svelte.dev/docs/images
+
+
+
+
+
+Do you want to learn how to upload an image or any other file to your SvelteKit server and save it to the filesystem? In this post, we will look at how exactly you can do that. I ran into this problem myself a few days ago, and it took a while to figure it out. Thus I hope it will help you!
+
+Sponsored: Apryse
+Easily embed PDFs in your web app with our standalone PDF viewer library. Try our 5 minute demo.
+Ads by EthicalAds
+×
+Therefore, after reading this post and following the steps, you will have a frontend where you can upload an image and a SvelteKit Endpoint (Server) to save the file to the filesystem!
+
+Project Preparation
+In case you already have a SvelteKit project, you can skip this step. In it, we will create a new project and use it as a base for the guide.
+
+We can create a new project by using the following commands:
+
+Copy
+npm init svelte@next image-upload
+cd image-upload
+npm install
+npm run dev
+After the first command, you have to select some configurations. For this guide, I will use the following:
+
+Skeleton Project
+TypeScript: No
+Add ESLint: No
+Add Prettier: No
+Add Playwright: No
+This will then create a new project, and the following command will install the required packages and run a dev server.
+
+Need help or want to share feedback? Join my discord community!
+
+Now we can go to http://localhost:3000 to check if the SvelteKit Project is running.
+
+After that, we will remove the contents of the src/routes/index.svelte file. With that, we finished the project setup and can begin with the guide on uploading an image to a SvelteKit server.
+
+KOFI Logo
+If this guide is helpful to you and you like what I do, please support me with a coffee!
+
+Setup an Image Upload for SvelteKit
+Let us first create the image visualization and the upload visuals. We will not include logic yet, just the design. So let’s add the following to src/routes/index.svelte:
+
+Copy
+<div class="container">
+    <img id="avatar" src="avatar.png" alt="avatar"/>
+    <input class="hidden" id="file-to-upload" type="file" accept=".png,.jpg"/>
+    <button class="upload-btn">Upload</button>
+</div>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #avatar {
+        border-radius: 99999px;
+        height: 128px;
+        width: 128px;
+        margin-bottom: 10px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .upload-btn {
+        width: 128px;
+        height: 32px;
+        background-color: black;
+        font-family: sans-serif;
+        color: white;
+        font-weight: bold;
+        border: none;
+    }
+
+    .upload-btn:hover {
+        background-color: white;
+        color: black;
+        outline: black solid 2px;
+    }
+</style>
+This results in the following visuals:
+
+SvelteKit Image Upload: Basic Visuals
+With the visuals, let’s get started with the logic. The first step is to make the upload button execute the file input logic. To do this, we have to bind the input field to a variable and execute its click method on the button click. We can do that like this:
+
+Copy
+<script>
+    let fileInput;
+</script>
+
+<div class="container">
+    <img id="avatar" src="avatar.png" alt="avatar"/>
+    <input class="hidden" id="file-to-upload" type="file" accept=".png,.jpg" bind:this={fileInput} />
+    <button class="upload-btn" on:click={ () => fileInput.click() }>Upload</button>
+</div>
+If you now click on the button, you will see that it executes the input field logic. To show the image inside our img element, we need to get the file itself, parse it to a base64 string, and then visualize it inside the HTML.
+
+Visualize the Uploaded Image
+The first step to achieving this is to create a variable for the avatar image and one for the files of the input field. Then we need to create a function that will get the image data as base64 and write it to the image variable. Additionally, we want to execute that function whenever the file in the file input changes. Lastly, we need to add an if condition that checks if an image is available and visualizes it.
+
+Copy
+<script>
+    let fileInput;
+    let files;
+    let avatar;
+
+    function getBase64(image) {
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e => {
+            avatar = e.target.result;
+        };
+    };
+</script>
+
+<div class="container">
+    {#if avatar}
+        <img id="avatar" src={avatar} alt="avatar"/>
+    {:else}
+        <img id="avatar" src="avatar.png" alt="avatar"/>
+    {/if}
+    <input class="hidden" id="file-to-upload" type="file" accept=".png,.jpg" bind:files bind:this={fileInput} on:change={() => getBase64(files[0])}/>
+    <button class="upload-btn" on:click={ () => fileInput.click() }>Upload</button>
+</div>
+If we now click on the upload button and select an appropriate file, we can see that the visual representation changes to the new image. But with that step, we did not yet upload the image to our svelte kit server. To do this, we have to create an endpoint that accepts a post request and then saves the image to storage.
+
+First, let’s create the function to send the image to this new endpoint. We will execute it inside of our getBase64 function in the onload section.
+
+Copy
+<script>
+    let fileInput;
+    let files;
+    let avatar;
+
+    function getBase64(image) {
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e => {
+            avatar = e.target.result;
+            uploadFunction(e.target.result);
+        };
+    };
+
+    async function uploadFunction(imgBase64) {
+        const data = {}
+        const imgData = imgBase64.split(',');
+        data["image"] = imgData[1];
+        console.log(data);
+        await fetch(`/upload`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    };
+</script>
+With that, we are now sending the image to an endpoint “/upload” when changing it inside the input field. To store it on the server, we have to create that endpoint.
+
+Create a SvelteKit Endpoint for the Image upload
+So let’s go ahead and create src/routes/upload.js. In this endpoint, we will retrieve the image and then save it to the filesystem. In this step, you can do whatever you like, for example, save it to a database.
+
+Copy
+import { writeFileSync } from 'fs';
+
+export async function post({ request }) {
+    const data = JSON.parse((await request.body.read()).toString());
+
+    const file = data['image'];
+
+    writeFileSync(`static/avatar.png`, file, 'base64');
+}
+With that, we have a working file upload for SvelteKit!
+
+Conclusion
+After following the steps, you can now upload an image and save it on your filesystem! In short, the steps are to encode your image as a base64 string, send it to an endpoint with an HTTP Post request, and lastly, write it to a file inside of this endpoint.
+
+You can also find the source code of this guide on GitHub here.
+
+I hope this guide has helped you. In case you liked it consider subscribing to my newsletter to receive updates on new posts!

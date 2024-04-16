@@ -1,16 +1,16 @@
 <script type:module>
-	console.log('Diaries');
+	console.log('Events');
 	import { page } from '$app/stores';
 
-	import Diaries from '/src/components/Diaries.svelte';
+	import Events from '/src/components/Events.svelte';
 
 	let serializedItems = $page.params.items;
 
 	let items = JSON.parse(decodeURIComponent(serializedItems));
 
-	console.log('diaries/[items] - crumbs: ', items);
+	console.log('events/[items] - crumbs: ', items);
 </script>
 
-<h2>made it to /diaries/</h2>
+<h2>made it to /events/</h2>
 
-<Diaries {items} />
+<Events {items} />

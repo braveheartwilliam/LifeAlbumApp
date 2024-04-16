@@ -1,16 +1,26 @@
 <script>
-	export let items = [];
-
 	import Breadcrumbs from './Breadcrumbs.svelte';
-	items.pop();
+	export let items;
 
-	items.push({ text: 'Trips', href: '#trips' });
+	console.log('PlacesComp: ', items);
+
+	let currActionType = items[items.length - 1].actionType;
+
+	items.push({ text: 'Places', href: '#places', actionType: currActionType });
 </script>
 
 <div class="trips_home">
 	<Breadcrumbs {items} />
 
-	<h1>This is where view by trips and itineraries</h1>
+	<h2>This is accessed to '{currActionType}`</h2>
+	{#if currActionType == 'view'}
+		<p>Display all of the trips</p>
+		<!-- TODO WHEN ADDING CODE AS VISITED, PLAN TO VISIT, HOPE TO VISIT -->
+	{:else if currActionType == 'add'}
+		<p>Offer options for adding new trips</p>
+	{:else if currActionType == 'delete'}
+		<p>Pick trips(s) to delete</p>
+	{/if}
 </div>
 
 <style>

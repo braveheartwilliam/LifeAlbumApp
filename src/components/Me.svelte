@@ -1,30 +1,31 @@
 <script>
-	export let compParam = {};
-
 	import Breadcrumbs from './Breadcrumbs.svelte';
 
-	let action = compParam.action;
-	let items = compParam.items;
+	export let items;
 
-	// items.pop();
-	console.log('me: ', compParam, action, items);
+	console.log('PlacesComp: ', items);
 
-	// items.push({ text: 'Me', href: '#me' });
+	let currActionType = items[items.length - 1].actionType;
+
+	items.push({ text: 'Me', href: '#places', actionType: currActionType });
 </script>
 
 <div class="me_home">
 	<Breadcrumbs {items} />
 
-	<h1>This is where view by me</h1>
-	<h2>{action}</h2>
+	<h1>
+		This is where view by "me"/h1>
 
-	{#if action == 'view'}
-		<h2>execute function for viewing all "me" entries</h2>
-	{:else if action == 'manage'}
-		<h2>execute function for viewing all "me" entries</h2>
-	{:else}
-		<h2>ERROR no action provided</h2>
-	{/if}
+		<h2>This is accessed to '{currActionType}`</h2>
+		{#if currActionType == 'view'}
+			<p>Display "me"</p>
+			<!-- TODO WHEN ADDING CODE AS VISITED, PLAN TO VISIT, HOPE TO VISIT -->
+		{:else if currActionType == 'add'}
+			<p>Offer options for adding new places</p>
+		{:else if currActionType == 'delete'}
+			<p>Pick location(s)/place(s) to delete</p>
+		{/if}
+	</h1>
 </div>
 
 <style>

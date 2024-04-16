@@ -12,7 +12,7 @@
 		console.log('login: ', userName, userPassword);
 		// Save password to session storage
 		// todo***************  THIS IS TEMPORARY PENDING IMPLEMENTING AUTHENTICATION  *******
-		sessionStorage.setItem('userName', userPassword);
+		sessionStorage.setItem('userName', userName);
 		sessionStorage.setItem('userPassword', userPassword); //******/
 		// ***************  THIS IS TEMPORARY PENDING IMPLEMENTING AUTHENTICATION  *******
 

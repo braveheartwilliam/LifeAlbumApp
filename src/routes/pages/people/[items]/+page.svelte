@@ -1,8 +1,8 @@
 <script type:module>
-	console.log('Places');
+	console.log('People');
 	import { page } from '$app/stores';
 
-	import Places from '/src/components/Places.svelte';
+	import People from '/src/components/People.svelte';
 
 let serializedItems = $page.params.items;
 
@@ -13,4 +13,4 @@ let items = JSON.parse(decodeURIComponent(serializedItems));
 
 <h2>made it to /places/</h2>
 
-<Places {items} />
+<People {items} />

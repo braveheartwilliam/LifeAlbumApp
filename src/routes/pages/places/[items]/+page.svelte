@@ -4,11 +4,13 @@
 
 	import Places from '/src/components/Places.svelte';
 
-let serializedItems = $page.params.items;
+	let serializedItems = $page.params.items;
 
-let items = JSON.parse(decodeURIComponent(serializedItems));
+	let items = JSON.parse(decodeURIComponent(serializedItems));
 
 	console.log('places/[items] - crumbs: ', items);
+
+
 </script>
 
 <h2>made it to /places/</h2>

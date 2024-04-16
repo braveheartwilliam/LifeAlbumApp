@@ -2,6 +2,7 @@
 	import Breadcrumbs from '/src/components/Breadcrumbs.svelte';
 	import Places from '/src/components/Places.svelte';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	// import Trips from '$lib//Trips.svelte';
 	// import Pictures from '$lib//Pictures.svelte';
 	// import People from '$lib/People.svelte';
@@ -26,7 +27,7 @@
 	console.log('mainMenu2: ', items);
 
 	// Serialize the array before passing it to the URL
-	let serializedItems;
+	let serializedItems = '';
 
 	// function setAction(action) {
 	// 	// let actionType = action;
@@ -34,9 +35,16 @@
 	// 	console.log('mainMenu: ', items, action, compParam);
 	// }
 
-	function handleSerialization(action) {
-		items.actionType = action;
+	function performSerialization(action) {
+		console.log('performSerialization: action: ', action);
+
+		items[0].actionType = action;
+		// items.userName = userName;
+		console.log('performSerialization: ', items);
+
 		serializedItems = encodeURIComponent(JSON.stringify(items));
+		// goto('route/pages/pictures/{serializedItems}/');
+		//   window.location.href = `route/pages/pictures/${serializedItems}/`;
 	}
 </script>
 
@@ -50,51 +58,101 @@
 					<p>What do you want to see?</p>
 					<nav class="home_left_nav">
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/places/{serializedItems}/"
+							<a on:click={performSerialization('view')} href="/pages/places/{serializedItems}/"
 								>Places</a
 							>
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/trips/{serializedItems}/"
+							<a on:click={performSerialization('view')} href="/pages/trips/{serializedItems}/"
 								>Trips</a
 							>
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/events/{serializedItems}/"
-								>Events</a
-							>
+							<!-- <details>
+								<summary class="nav_list_mainSelection"> Events </summary> -->
+							<p class="nav_list_mainSelection">Events</p>
+
+							<ul class="nav_list_ul, no_list_line">
+								<li>
+									<a on:click={performSerialization('add')} href="/pages/events/{serializedItems}/"
+										>Add Event</a
+									>
+								</li>
+							</ul>
+							<!-- </details> -->
+							<!-- </details> -->
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/pictures/{serializedItems}/"
-								>Pictures</a
-							>
+							<!-- <details> -->
+							<!-- <summary class="nav_list_mainSelection"> Pictures </summary> -->
+							<p class="nav_list_mainSelection">Pictures</p>
+
+							<ul class="nav_list_ul vertical-menu">
+								<li>
+									<a
+										class="active"
+										href="/pages/pictures/{serializedItems}/"
+										on:click={() => performSerialization('view')}
+										>View Pictures
+									</a>
+									<!-- <button type="button" class="link" on:click={performSerialization('view')}>
+										<span>View</span>
+									</button> -->
+								</li>
+								<li>
+									<a
+										on:click={() => performSerialization('add')}
+										href="/pages/pictures/{serializedItems}/">Add Pictures</a
+									>
+								</li>
+								<li>
+									<a
+										on:click={() => performSerialization('update')}
+										href="/pages/pictures/{serializedItems}/">Update Pictures</a
+									>
+								</li>
+								<li>
+									<a
+										on:click={() => performSerialization('delete')}
+										href="/pages/pictures/{serializedItems}/">Delete Pictures</a
+									>
+								</li>
+							</ul>
+							<!-- </details> -->
 						</li>
+
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/people/{serializedItems}/"
+							<a on:click={performSerialization('view')} href="/pages/people/{serializedItems}/"
 								>People</a
 							>
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/me/{serializedItems}/">Me</a>
+							<a on:click={performSerialization('view')} href="/pages/me/{serializedItems}/">Me</a>
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/music/{serializedItems}/"
+							<a on:click={performSerialization('view')} href="/pages/music/{serializedItems}/"
 								>Music</a
 							>
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/diaries/{serializedItems}/"
+							<a on:click={performSerialization('view')} href="/pages/diaries/{serializedItems}/"
 								>Diaries</a
 							>
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/travelBlogs/{serializedItems}/"
-								>Travel Blogs</a
+							<a
+								on:click={performSerialization('view')}
+								href="/pages/travelBlogs/{serializedItems}/">Travel Blogs</a
 							>
 						</li>
 						<li class="nav_list">
-							<a on:click={handleSerialization('view')} href="/pages/videos/{serializedItems}/"
+							<a on:click={performSerialization('view')} href="/pages/videos/{serializedItems}/"
 								>Video</a
+							>
+						</li>
+						<li class="nav_list">
+							<a on:click={performSerialization('view')} href="/pages/albums/{serializedItems}/"
+								>Albums</a
 							>
 						</li>
 					</nav>
@@ -210,6 +268,10 @@
 -->
 
 <style>
+	nav {
+		list-style-type: none;
+	}
+
 	li > a {
 		position: relative;
 		left: -7px;
@@ -221,6 +283,43 @@
 		margin: 0 5px;
 		text-decoration: none;
 	}
+	.nav_list_mainSelection {
+		margin: 0 0 0 0;
+
+		color: blue;
+	}
+	.no_list_line {
+	}
+
+	.nav_list_ul {
+		margin: 0 0 0 0;
+		text-decoration: none;
+	}
+
+	button.link {
+		font-family: 'Verdana' sans-serif;
+		font-size: 1em;
+		text-align: left;
+		color: blue; /* Link color */
+		background: none;
+		margin: 0;
+		padding: 0;
+		border: none;
+		cursor: pointer; /* Cursor style */
+		overflow: visible; /* Ensures width is not restricted */
+		width: auto; /* Allows the button to shrink to fit the content */
+	}
+
+	button.link span {
+		text-decoration: underline; /* Underline text */
+	}
+
+	button.link:hover span,
+	button.link:focus span {
+		color: black; /* Change text color on hover/focus */
+		text-decoration: none; /* Remove underline on hover/focus */
+	}
+
 	.page {
 		width: 100vw;
 		height: 100vh;
@@ -329,5 +428,26 @@
 	}
 	.logo.svelte:hover {
 		filter: drop-shadow(0 0 2em #ff3e00aa);
+	}
+	.vertical-menu {
+		width: 70rem;
+	}
+
+	.vertical-menu a {
+		background-color: #eee;
+		color: black;
+		display: block;
+		padding: 12px;
+		text-decoration: none;
+	}
+
+	.vertical-menu a:hover {
+		background-color: #04aa6d;
+		color: white;
+	}
+
+	.vertical-menu a.active {
+		background-color: #04aa6d;
+		color: white;
 	}
 </style>

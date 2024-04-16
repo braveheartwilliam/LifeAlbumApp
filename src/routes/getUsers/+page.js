@@ -1,8 +1,9 @@
 /**@type {import('./$types' ).PageLoad} */
 
+
 // import { onMount } from 'svelte';
 // import { Surreal } from 'surrealdb.js';
-import { dbConnect, db } from '../../lib/surrealdbConnect.js';
+import { dbConnect, db } from '../../lib/api/server/surrealdbConnect.js';
 
 dbConnect();
 export async function load({ params }) {
@@ -11,7 +12,7 @@ export async function load({ params }) {
 	// const data = await db.query('SELECT * FROM user');
 	const result = await db.query( 'SELECT * FROM user' );
 
-	
+
 	console.log('result: ', result);
 
 	// `result` is the array containing another array with the object
