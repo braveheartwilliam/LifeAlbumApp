@@ -20,10 +20,10 @@
 		if (!browser) {
 			console.log('Executing in server');
 			// goto('user/login/{userName}');
-			redirect(301, '/user/login/{userName}');
+			redirect(301, '/src/routes/pages/user/login/{userName}');
 		} else {
 			console.log('Executing in browser');
-			goto(`user/login/{userName}`);
+			goto(`/user/login/${userName}`);
 
 			console.log('after goto in login');
 		}
@@ -36,7 +36,7 @@
 	<div class="login">
 		<h2 class="loginTitle">Please Login -- or create an account</h2>
 		<form class="loginForm" action="user/login/{userName}">
-			<!-- <form class="loginForm"> -->
+		<!-- <form class="loginForm"> -->
 			<input
 				class="loginName"
 				id="name"

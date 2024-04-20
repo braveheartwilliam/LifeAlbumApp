@@ -247,7 +247,7 @@
 					{data[0]}: {data[1]}, {data[2]}: {data[3]}, {data[4]}: {data[5]}, {data[6]}: {data[7]}, {data[8]}:
 					{data[9]}, {data[10]}: {data[11]}, {data[12]}: {data[13]}, {data[14]}: {data[15]}, {data[16]}:
 					{data[17]}, {data[18]}: {data[19]}
-					<!-- <img src="/static/your-uploaded-image.jpg" alt="Uploaded Image">    -->
+					<img src="/src/IMG_6361.JPG" alt="This Picture">
 					<!--  TODO -- ADD IMAGE CODING -->
 				</li>
 				<!-- <button on:click={viewPicture}>View</button>
@@ -261,6 +261,11 @@
 </div>
 
 <style>
+
+img {
+	max-width: 5%;
+	height: 5%;}
+
 	.Pictures_home {
 		color: blue;
 		font-size: large;
